@@ -1,0 +1,132 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Fitness Gym</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+
+<body class="bg-white text-gray-900">
+    <nav class="flex justify-between items-center p-6 shadow-md rounded-lg">
+        <div class="text-2xl font-bold">K1 FITTNESS</div>
+        <ul class="flex space-x-6 text-gray-700 font-medium">
+            <li>
+                <a href="{% url 'home' %}"
+                    class="{% if request.path == '/' %}border-b-2 border-green-500 pb-1{% endif %}">Home</a>
+            </li>
+            <li>
+                <a href="{% url 'schedule' %}"
+                    class="{% if request.path == '/schedules' %}border-b-2 border-green-500 pb-1{% endif %}">Schedule</a>
+            </li>
+            <li>
+                <a href="{% url 'trainers' %}"
+                    class="{% if request.path == '/trainers' %}border-b-2 border-green-500 pb-1{% endif %}">Trainers</a>
+            </li>
+            <li>
+                <a href="{% url 'tips' %}"
+                    class="{% if request.path == '/tips' %}border-b-2 border-green-500 pb-1{% endif %}">Tips</a>
+            </li>
+            <li>
+                <a href="{% url 'blog' %}"
+                    class="{% if request.path == '/blog' %}border-b-2 border-green-500 pb-1{% endif %}">Blog</a>
+            </li>
+            <li>
+                <a href="{% url 'location' %}"
+                    class="{% if request.path == '/locations' %}border-b-2 border-green-500 pb-1{% endif %}">Location</a>
+            </li>
+        </ul>
+        <div class="relative inline-block text-left">
+            {% if request.user.is_authenticated %}
+            <button id="user-menu-button" onclick="toggleDropdown()"
+                class="flex items-center space-x-2 text-gray-700 focus:outline-none">
+                <span>Welcome, {{ request.user.username }}</span>
+                <img src="{{ request.user.profile_picture }}" alt="User Image"
+                    class="w-8 ml-2 h-8 rounded-full object-cover border-2 border-gray-300">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                </svg>
+            </button>
+            <div id="dropdown" class="hidden absolute right-0 mt-2 w-48 bg-white border rounded-md shadow-lg z-10">
+                <a href="{% url 'profile' %}"
+                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Profile</a>
+                <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Notifications</a>
+                <a href="{% url 'logout' %}" class="block px-4 py-2 text-sm text-red-600 hover:bg-gray-100">Logout</a>
+            </div>
+            {% else %}
+            <a href="{% url 'user_login' %}" class="text-green-600 hover:underline">Login</a>
+            {% endif %}
+        </div>
+    </nav>
+
+    <!-- Dynamic content block -->
+    {% block content %}{% endblock %}
+
+    <footer class="text-gray-900 h-8 py-6 mt-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-4 gap-8">
+            <!-- Brand -->
+            <div>
+                <h2 class="text-2xl font-bold text-green-500">K1 FITNESS</h2>
+                <p class="text-sm mt-2 text-gray-400">Train Hard. Stay Fit. Live Healthy.</p>
+            </div>
+
+            <!-- Quick Links -->
+            <div>
+                <h3 class="text-lg font-semibold mb-2">Quick Links</h3>
+                <ul class="space-y-1 text-sm text-gray-400">
+                    <li><a href="#" class="hover:text-white">Home</a></li>
+                    <li><a href="#" class="hover:text-white">Schedule</a></li>
+                    <li><a href="#" class="hover:text-white">Trainers</a></li>
+                    <li><a href="#" class="hover:text-white">Tips</a></li>
+                    <li><a href="#" class="hover:text-white">Blog</a></li>
+                </ul>
+            </div>
+
+            <!-- Contact Info -->
+            <div>
+                <h3 class="text-lg font-semibold mb-2">Contact Us</h3>
+                <ul class="text-sm text-gray-400 space-y-1">
+                    <li>Email: info@k1fitness.com</li>
+                    <li>Phone: +250 788 282 329</li>
+                    <li>Location: Kigali, Rwanda</li>
+                </ul>
+            </div>
+
+            <!-- Social Media -->
+            <div>
+                <h3 class="text-lg font-semibold mb-2">Follow Us</h3>
+                <div class="flex space-x-4 text-gray-400">
+                    <a href="#" class="hover:text-white"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" class="hover:text-white"><i class="fab fa-instagram"></i></a>
+                    <a href="#" class="hover:text-white"><i class="fab fa-twitter"></i></a>
+                    <a href="#" class="hover:text-white"><i class="fab fa-youtube"></i></a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bottom -->
+        <div class="mt-10 border-t border-gray-700 pt-4 text-center text-sm text-gray-500">
+            © 2025 K1 Fitness. All rights reserved.
+        </div>
+    </footer>
+
+
+    <script>
+        function toggleDropdown() {
+            const dropdown = document.getElementById("dropdown");
+            dropdown.classList.toggle("hidden");
+        }
+
+        document.addEventListener("click", function (event) {
+            const dropdown = document.getElementById("dropdown");
+            const button = document.getElementById("user-menu-button");
+
+            if (!button.contains(event.target) && !dropdown.contains(event.target)) {
+                dropdown.classList.add("hidden");
+            }
+        });
+    </script>
+</body>
+
+</html>

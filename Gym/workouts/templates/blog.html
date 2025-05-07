@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="bg-gray-100 py-10 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-4xl mx-auto text-center">
+        <h1 class="text-4xl font-extrabold text-gray-900 mb-4">K1 Blogs</h1>
+        <p class="text-lg text-gray-600">Get the latest updates, tips, and fitness guides from our expert trainers.</p>
+    </div>
+
+    <div class="mt-10 grid gap-8 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+        <!-- Example post card -->
+        {% for post in posts %}
+        <div class="bg-white shadow-md rounded-lg overflow-hidden hover:shadow-xl transition-shadow duration-300">
+            <img src="{{ post.image.url }}" alt="{{ post.title }}" class="w-full h-48 object-cover">
+            <div class="p-5">
+                <h2 class="text-xl font-semibold text-gray-800">{{ post.title }}</h2>
+                <p class="text-sm text-gray-500 mt-1">{{ post.date }}</p>
+                <p class="mt-2 text-gray-700 text-sm">{{ post.content|truncatewords:30 }}</p>
+                <a href="{% url 'post_detail' post.id %}"
+                    class="text-indigo-600 hover:text-indigo-800 mt-3 inline-block">Read More →</a>
+            </div>
+        </div>
+        {% empty %}
+        <p class="text-gray-500 col-span-3 text-center">No blog posts yet. Stay tuned!</p>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

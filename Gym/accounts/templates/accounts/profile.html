@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>{{ user.username }}'s Profile</h2>
+<ul>
+    <li>Email: {{ user.email }}</li>
+    <li>Phone: {{ profile.phone }}</li>
+    <li>User Type: {{ profile.get_user_type_display }}</li>
+</ul>
+{% if profile.profile_picture %}
+<img src="{{ profile.profile_picture.url }}" alt="Profile Picture" width="200">
+{% endif %}
+{% endblock %}
