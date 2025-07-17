@@ -1,0 +1,157 @@
+.services-container {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 2rem 1rem;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #2c5364;
+}
+
+/* Section Titles */
+.services-section h2 {
+    text-align: center;
+    font-size: 2.4rem;
+    margin-bottom: 2rem;
+    font-weight: 700;
+    color: #2c5364;
+}
+
+/* ===== What We Offer ===== */
+.offers-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1.8rem;
+}
+
+.offer-card {
+    background: #f9f9f9;
+    border-radius: 14px;
+    padding: 2rem 1.5rem;
+    box-shadow: 0 6px 18px rgba(44, 83, 100, 0.1);
+    text-align: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    cursor: default;
+}
+
+.offer-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 30px rgba(44, 83, 100, 0.2);
+}
+
+.offer-icon {
+    font-size: 3.5rem;
+    margin-bottom: 1rem;
+}
+
+/* ===== Promotions ===== */
+.promotions-slider {
+    display: flex;
+    gap: 1.5rem;
+    overflow-x: auto;
+    padding-bottom: 1rem;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+}
+
+.promotion-card {
+    min-width: 320px;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 8px 25px rgba(44, 83, 100, 0.15);
+    background-color: #fff;
+    flex-shrink: 0;
+    transition: transform 0.3s ease;
+    cursor: pointer;
+}
+
+.promotion-card:hover {
+    transform: scale(1.05);
+}
+
+.promotion-card img {
+    display: block;
+    width: 100%;
+    height: 150px;
+    object-fit: cover;
+}
+
+.promotion-info {
+    padding: 1rem 1.2rem;
+}
+
+.promotion-info h3 {
+    margin: 0 0 0.4rem;
+    color: #2c5364;
+    font-weight: 700;
+    font-size: 1.3rem;
+}
+
+.promotion-info p {
+    margin: 0;
+    color: #555;
+    font-size: 1rem;
+}
+
+/* ===== Testimonials ===== */
+.testimonials-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2rem;
+    text-align: center;
+}
+
+.testimonial-card {
+    background: #e9f0f5;
+    border-radius: 16px;
+    padding: 2rem 1.5rem;
+    font-style: italic;
+    color: #3a5068;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.05);
+    position: relative;
+    min-height: 150px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    transition: background-color 0.3s ease;
+    cursor: default;
+}
+
+.testimonial-card:hover {
+    background-color: #d0e1f9;
+}
+
+.testimonial-card p {
+    margin-bottom: 1.5rem;
+    font-size: 1.1rem;
+}
+
+.testimonial-card footer {
+    font-weight: 700;
+    color: #2c5364;
+    font-style: normal;
+    font-size: 1rem;
+}
+
+/* Scrollbar styling for promotions slider */
+.promotions-slider::-webkit-scrollbar {
+    height: 8px;
+}
+
+.promotions-slider::-webkit-scrollbar-thumb {
+    background-color: #2c5364;
+    border-radius: 4px;
+}
+
+.promotions-slider::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .services-container {
+        padding: 1rem;
+    }
+
+    .services-section h2 {
+        font-size: 2rem;
+    }
+}
