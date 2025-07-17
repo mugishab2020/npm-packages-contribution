@@ -1,6 +1,5 @@
 .hero-section {
     height: 60vh;
-    background-color: #7e92a5;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -9,6 +8,37 @@
     padding: 2rem;
     border-radius: 10px;
     margin: 2rem;
+}
+
+.hero-section {
+    position: relative;
+    height: 400px;
+    overflow: hidden;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 0 20px;
+}
+
+.hero-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    transition: opacity 1s ease-in-out;
+    will-change: opacity;
+}
+
+.hero-content {
+    position: relative;
+    z-index: 10;
+    max-width: 800px;
 }
 
 .hero-content h1 {
@@ -25,7 +55,7 @@
 
 .hero-btn {
     padding: 0.8rem 1.8rem;
-    background-color: #3498db;
+    background-color: #0f2020;
     color: white;
     text-decoration: none;
     font-weight: bold;
@@ -34,7 +64,7 @@
 }
 
 .hero-btn:hover {
-    background-color: #27ae60;
+    background-color: #0f2027;
 }
 
 .category-section {

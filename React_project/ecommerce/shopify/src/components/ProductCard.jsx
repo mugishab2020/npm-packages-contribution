@@ -1,8 +1,26 @@
-// src/components/ProductCard.js
-import React from 'react';
+import React, { useContext } from 'react';
+import { toast } from 'react-toastify';
+import { useCart } from '../context/CartContext';
 import '../styles/productCard.css';
 
 const ProductCard = ({ product }) => {
+
+  
+
+    const { cartItems, addToCart } = useCart();
+
+    const handleAddToCart = () => {
+
+
+        const existingItem = cartItems.find(item => item.id === product.id);
+        addToCart(product);
+        if (existingItem) {
+            toast.success(`${product.name} quantity increased!`);
+        } else {
+            toast.success(`${product.name} added to cart!`);
+        }
+    };
+
     return (
         <div className="product-card">
             <div className="product-image">
@@ -13,7 +31,7 @@ const ProductCard = ({ product }) => {
                 <p className="product-desc">{product.description}</p>
                 <p className="product-price">{product.price}K rwf</p>
             </div>
-            <button className="add-btn">Add to Cart</button>
+            <button className="add-btn" onClick={handleAddToCart}>Add to Cart</button>
         </div>
     );
 };

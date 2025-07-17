@@ -1,5 +1,5 @@
 // src/pages/HomePage.js
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import ProductCard from '../components/ProductCard';
 import '../styles/homepage.css';
 
@@ -133,13 +133,42 @@ export const products = [
         image: 'https://images.unsplash.com/photo-1596464716121-9ecdf87b3f6d?auto=format&fit=crop&w=400&q=80',
     },
 ];
+const heroImages = [
+    'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1350&q=80',
+    'https://images.unsplash.com/photo-1494526585095-c41746248156?auto=format&fit=crop&w=1350&q=80',
+    'https://images.unsplash.com/photo-1486308510493-cb6f1f6fa7e3?auto=format&fit=crop&w=1350&q=80',
+    'https://images.unsplash.com/photo-1499696012571-48fef32a3a4b?auto=format&fit=crop&w=1350&q=80',
+];
+
 
 const HomePage = () => {
     const categories = [...new Set(products.map(p => p.category))];
 
+
+    const [currentHeroIndex, setCurrentHeroIndex] = useState(0);
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setCurrentHeroIndex((prevIndex) => (prevIndex + 1) % heroImages.length);
+        }, 100);
+
+        return () => clearInterval(interval);
+    }, []);
+
     return (
         <div className="home-page">
             <header className="hero-section">
+                {heroImages.map((img, idx) => (
+                    <div
+                        key={idx}
+                        className="hero-background"
+                        style={{
+                            backgroundImage: `url(${img})`,
+                            opacity: idx === currentHeroIndex ? 1 : 0,
+                            zIndex: idx === currentHeroIndex ? 1 : 0,
+                        }}
+                    />
+                ))}
                 <div className="hero-content">
                     <h1>Shop the Latest Trends with Shopify</h1>
                     <p>Find the best deals on electronics, fashion, furniture, and more.</p>
