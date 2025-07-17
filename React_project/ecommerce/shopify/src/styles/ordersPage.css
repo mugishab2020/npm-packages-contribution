@@ -1,0 +1,132 @@
+/* src/styles/ordersPage.css */
+
+.orders-page {
+    max-width: 900px;
+    margin: 2rem auto;
+    padding: 2rem;
+    background: #ffffff;
+    border-radius: 16px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #333;
+}
+
+.orders-page h1 {
+    font-size: 2.2rem;
+    margin-bottom: 2rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    color: #222;
+    text-align: center;
+}
+
+.orders-list {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.order-card {
+    background: #f9f9f9;
+    border-radius: 14px;
+    padding: 1.8rem 2rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+    cursor: default;
+}
+
+.order-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+}
+
+.order-header {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 1.2rem;
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 1rem;
+    margin-bottom: 1rem;
+}
+
+.order-header span {
+    font-weight: 600;
+    font-size: 1rem;
+    flex: 1 1 120px;
+    color: #555;
+}
+
+.status {
+    padding: 4px 14px;
+    border-radius: 20px;
+    font-weight: 700;
+    font-size: 0.95rem;
+    color: #fff;
+    min-width: 110px;
+    text-align: center;
+    text-transform: capitalize;
+    letter-spacing: 0.04em;
+    user-select: none;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+}
+
+.status.pending {
+    background: linear-gradient(45deg, #f0ad4e, #e08e0b);
+}
+
+.status.shipped {
+    background: linear-gradient(45deg, #0275d8, #014f86);
+}
+
+.status.delivered {
+    background: linear-gradient(45deg, #5cb85c, #3d7a3d);
+}
+
+.status.cancelled {
+    background: linear-gradient(45deg, #d9534f, #a83230);
+}
+
+.order-items {
+    margin-bottom: 1.2rem;
+}
+
+.order-items strong {
+    font-size: 1.1rem;
+    margin-bottom: 0.4rem;
+    display: block;
+    color: #444;
+}
+
+.order-items ul {
+    list-style-type: disc;
+    margin-left: 1.4rem;
+    color: #666;
+    font-size: 0.95rem;
+    line-height: 1.5;
+}
+
+.order-total {
+    text-align: right;
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #111;
+    letter-spacing: 0.03em;
+    user-select: none;
+}
+
+/* Responsive tweaks */
+@media (max-width: 600px) {
+    .order-header {
+        flex-direction: column;
+        gap: 0.7rem;
+    }
+
+    .order-header span {
+        flex: 1 1 auto;
+    }
+
+    .order-total {
+        font-size: 1.1rem;
+    }
+}

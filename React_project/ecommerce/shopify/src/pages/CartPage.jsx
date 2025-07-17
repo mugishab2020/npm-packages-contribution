@@ -1,9 +1,11 @@
 import React from 'react';
 import { useCart } from '../context/CartContext';
 import '../styles/cartpage.css';
+import { useNavigate } from 'react-router-dom';
 
 const CartPage = () => {
     const { cartItems, removeFromCart, addToCart, clearCart } = useCart();
+    const navigate = useNavigate()
 
     if (cartItems.length === 0) {
         return <div className="cart-empty">🛒 Your cart is empty</div>;
@@ -59,7 +61,7 @@ const CartPage = () => {
             </button>
             <button
                 className="checkout-button"
-                onClick={() => alert('Checkout not implemented yet!')}
+                onClick={() => navigate('/checkout')}
             >
                 Proceed to Checkout
             </button>

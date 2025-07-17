@@ -1,10 +1,8 @@
-// src/pages/ProductsPage.js
 import React, { useState } from 'react';
 import Sidebar from '../components/Sidebar';
 import ProductCard from '../components/ProductCard';
 import '../styles/productsPage.css';
 
-// Example product data
 const allProducts = [
     {
         id: 1,

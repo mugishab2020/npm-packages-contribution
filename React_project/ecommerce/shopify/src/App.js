@@ -18,6 +18,8 @@ import ServicesPage from './pages/Services';
 import CartPage from './pages/CartPage';
 
 import "./App.css"
+import OrdersPage from './pages/OrdersPage';
+import CheckoutPage from './pages/CheckoutPage';
 
 function App() {
   return (
@@ -31,6 +33,8 @@ function App() {
             <Route path="/products/:id" element={<ProductDetailPage />} />
             <Route path="/services" element={<ServicesPage />} />
             <Route path="/cart" element={<CartPage />} />
+            <Route path='/orders' element={<OrdersPage />} />
+            <Route path='/checkout' element={<CheckoutPage />} />
             <Route
               path="/dashboard"
               element={

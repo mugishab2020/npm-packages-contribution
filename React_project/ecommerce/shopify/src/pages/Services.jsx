@@ -1,11 +1,13 @@
+// src/pages/ServicesPage.js
 import React from 'react';
+import { FaShippingFast, FaLock, FaCheckCircle, FaHeadset } from 'react-icons/fa';
 import '../styles/services.css';
 
 const offers = [
-    { icon: '🚚', title: 'Fast Shipping', desc: 'Quick delivery at your doorstep' },
-    { icon: '💳', title: 'Secure Payments', desc: 'Safe and encrypted transactions' },
-    { icon: '🛡️', title: 'Quality Assurance', desc: 'Only best quality products' },
-    { icon: '🤝', title: 'Customer Support', desc: '24/7 help and support' },
+    { icon: <FaShippingFast size={40} color="#2c5364" />, title: 'Fast Shipping', desc: 'Quick delivery at your doorstep' },
+    { icon: <FaLock size={40} color="#2c5364" />, title: 'Secure Payments', desc: 'Safe and encrypted transactions' },
+    { icon: <FaCheckCircle size={40} color="#2c5364" />, title: 'Quality Assurance', desc: 'Only best quality products' },
+    { icon: <FaHeadset size={40} color="#2c5364" />, title: 'Customer Support', desc: '24/7 help and support' },
 ];
 
 const promotions = [

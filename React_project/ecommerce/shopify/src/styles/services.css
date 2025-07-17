@@ -15,11 +15,15 @@
     color: #2c5364;
 }
 
-/* ===== What We Offer ===== */
 .offers-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
     gap: 1.8rem;
+}
+
+.offer-icon {
+    font-size: 3.5rem;
+    margin-bottom: 1rem;
 }
 
 .offer-card {
@@ -37,12 +41,7 @@
     box-shadow: 0 12px 30px rgba(44, 83, 100, 0.2);
 }
 
-.offer-icon {
-    font-size: 3.5rem;
-    margin-bottom: 1rem;
-}
 
-/* ===== Promotions ===== */
 .promotions-slider {
     display: flex;
     gap: 1.5rem;

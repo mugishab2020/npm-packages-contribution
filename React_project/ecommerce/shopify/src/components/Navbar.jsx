@@ -1,11 +1,8 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { FaUserCircle, FaSearch } from 'react-icons/fa';
-import { FaHome, FaBoxOpen, FaTachometerAlt, FaConciergeBell } from 'react-icons/fa';
-import { FaShoppingCart } from 'react-icons/fa';
+import { FaUserCircle, FaSearch, FaHome, FaBoxOpen, FaTachometerAlt, FaConciergeBell, FaShoppingCart, FaClipboardList } from 'react-icons/fa';
 import { useCart } from '../context/CartContext';
-
 
 import '../styles/navbar.css';
 
@@ -19,7 +16,6 @@ const Navbar = () => {
         navigate('/login');
     };
 
-
     return (
         <nav className="navbar">
             <div className="logo">
@@ -30,12 +26,35 @@ const Navbar = () => {
 
             <div className="nav-right">
                 <ul className="nav-links">
-                    <li><Link to="/"> <FaHome className="nav-icon" />Home</Link></li>
-                    <li><Link to="/products"> <FaBoxOpen className="nav-icon" />Products</Link></li>
+                    <li>
+                        <Link to="/">
+                            <FaHome className="nav-icon" />Home
+                        </Link>
+                    </li>
+                    <li>
+                        <Link to="/products">
+                            <FaBoxOpen className="nav-icon" />Products
+                        </Link>
+                    </li>
+                    {user && (
+                        <li>
+                            <Link to="/orders">
+                                <FaClipboardList className="nav-icon" />Orders
+                            </Link>
+                        </li>
+                    )}
                     {user?.role === 'admin' ? (
-                        <li><Link to="/dashboard"> <FaTachometerAlt className="nav-icon" />Dashboard</Link></li>
+                        <li>
+                            <Link to="/dashboard">
+                                <FaTachometerAlt className="nav-icon" />Dashboard
+                            </Link>
+                        </li>
                     ) : (
-                        <li><Link to="/services"> <FaConciergeBell className="nav-icon" />Services</Link></li>
+                        <li>
+                            <Link to="/services">
+                                <FaConciergeBell className="nav-icon" />Services
+                            </Link>
+                        </li>
                     )}
                 </ul>
 
@@ -50,11 +69,7 @@ const Navbar = () => {
                     </div>
                     <Link to="/cart" className="cart-link">
                         <FaShoppingCart className="cart-icon" />
-                        {user && (
-                            <span className="cart-count">
-                                {cartItems.length || 0}
-                            </span>
-                        )}
+                        {user && <span className="cart-count">{cartItems.length || 0}</span>}
                     </Link>
                     {user ? (
                         <div className="profile-section">
@@ -75,10 +90,7 @@ const Navbar = () => {
                     ) : (
                         <Link to="/login" className="login-link">
                             <FaUserCircle className="default-icon" />
-                            <button>
-                                Login
-                            </button>
-
+                            <button>Login</button>
                         </Link>
                     )}
                 </div>
