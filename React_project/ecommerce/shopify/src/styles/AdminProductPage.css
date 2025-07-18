@@ -1,8 +1,8 @@
-.admin-container {
+.admin-product-container {
     padding: 2rem;
-    background: #f5f5f5;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f7f9fa;
     min-height: 100vh;
-    font-family: 'Segoe UI', sans-serif;
 }
 
 .header {
@@ -12,103 +12,140 @@
     margin-bottom: 2rem;
 }
 
-.add-btn {
-    background: #2b9348;
-    color: white;
-    border: none;
-    padding: 0.6rem 1.2rem;
-    border-radius: 6px;
-    cursor: pointer;
-    font-weight: 600;
-}
-
 .product-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-    gap: 1.5rem;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 20px;
+    padding: 2rem;
 }
 
 .product-card {
-    background: white;
+    background-color: #ffffff;
     border-radius: 12px;
-    overflow: hidden;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-    transition: transform 0.2s ease-in-out;
+    box-shadow: 0 0 12px rgba(0, 0, 0, 0.1);
+    padding: 1.2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transition: transform 0.2s ease;
 }
 
 .product-card:hover {
-    transform: scale(1.02);
+    transform: translateY(-5px);
 }
 
-.product-card img {
+.card-img-placeholder {
     width: 100%;
-    height: 180px;
+    height: 200px;
+    background-color: #f4f4f4;
+    border-radius: 10px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.card-img-placeholder img {
+    width: 100%;
+    height: 100%;
     object-fit: cover;
 }
 
-.info {
-    padding: 1rem;
-}
-
-.info h3 {
-    margin: 0.5rem 0;
+.product-card h3 {
+    margin-top: 1rem;
     font-size: 1.2rem;
     color: #333;
 }
 
-.price {
-    color: #1b4332;
-    font-weight: bold;
+.product-card .desc {
+    color: #555;
+    font-size: 0.95rem;
+    margin: 0.5rem 0;
+    text-align: center;
 }
 
-.category {
+.product-card .price {
+    color: #222;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+}
+
+.product-card .discount {
+    color: #e63946;
+    margin-left: 5px;
+    font-weight: normal;
+}
+
+.product-card .category {
     font-size: 0.9rem;
-    color: #888;
+    color: #666;
+    margin-bottom: 0.8rem;
+}
+
+.btn-group {
+    display: flex;
+    gap: 10px;
+    margin-top: auto;
+}
+
+.edit-btn,
+.delete-btn {
+    padding: 6px 12px;
+    font-size: 0.9rem;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.2s;
 }
 
 .edit-btn {
-    margin-top: 0.5rem;
-    background: #219ebc;
+    background-color: #1c3d4d;
     color: white;
-    border: none;
-    padding: 0.4rem 0.8rem;
-    border-radius: 5px;
-    cursor: pointer;
+}
+
+.edit-btn:hover {
+    background-color: rgb(75, 75, 75);
+    color: #1c3d4d;
+}
+
+.delete-btn {
+    background-color: #0f2020;
+    color: white;
+}
+
+.delete-btn:hover {
+    background-color: #0f0f0f;
 }
 
 .modal-overlay {
     position: fixed;
     top: 0;
     left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(0, 0, 0, 0.4);
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
     display: flex;
-    align-items: center;
     justify-content: center;
-    z-index: 99;
+    align-items: center;
+    z-index: 999;
 }
 
 .modal {
     background: white;
     padding: 2rem;
     border-radius: 10px;
-    width: 90%;
-    max-width: 500px;
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+    width: 400px;
+    max-width: 90%;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
-.modal h3 {
-    margin-bottom: 1rem;
-    font-size: 1.5rem;
-    color: #333;
-}
-
-.modal input {
+.modal input,
+.modal textarea,
+.modal select {
     width: 100%;
     padding: 0.6rem;
     margin-bottom: 1rem;
-    border: 1px solid #ddd;
+    border: 1px solid #ccc;
     border-radius: 6px;
 }
 
@@ -120,18 +157,16 @@
 
 .modal-actions button {
     padding: 0.5rem 1rem;
-    font-weight: 600;
     border: none;
-    border-radius: 5px;
+    border-radius: 6px;
     cursor: pointer;
 }
 
 .modal-actions button:first-child {
-    background: #2a9d8f;
+    background-color: #2e7d32;
     color: white;
 }
 
 .modal-actions button:last-child {
-    background: #ccc;
-    color: black;
+    background-color: #ccc;
 }

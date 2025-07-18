@@ -1,108 +1,275 @@
 import React, { useState } from 'react';
 import '../styles/AdminProductPage.css';
 
-const mockProducts = [
+const categories = ['Electronics', 'Books', 'Clothing', 'Home', 'Sports'];
+
+const initialProducts = [
     {
         id: 1,
         name: 'Wireless Headphones',
-        price: 49.99,
+        description: 'Bluetooth headphones with noise cancellation',
+        price: 79.99,
+        discount: 0,
         category: 'Electronics',
-        description: 'Noise-canceling over-ear headphones.',
-        image: 'https://via.placeholder.com/150',
+        image: null,
     },
     {
         id: 2,
-        name: 'Running Shoes',
+        name: 'Wireless Headphones',
+        description: 'Bluetooth headphones with noise cancellation',
         price: 79.99,
-        category: 'Fashion',
-        description: 'Lightweight and comfortable for runners.',
-        image: 'https://via.placeholder.com/150',
+        discount: 0,
+        category: 'Electronics',
+        image: null,
+    },
+    {
+        id: 3,
+        name: 'Wireless Headphones',
+        description: 'Bluetooth headphones with noise cancellation',
+        price: 79.99,
+        discount: 0,
+        category: 'Electronics',
+        image: null,
+    },
+    {
+        id: 4,
+        name: 'Wireless Headphones',
+        description: 'Bluetooth headphones with noise cancellation',
+        price: 79.99,
+        discount: 0,
+        category: 'Electronics',
+        image: null,
+    },
+    {
+        id: 5,
+        name: 'Wireless Headphones',
+        description: 'Bluetooth headphones with noise cancellation',
+        price: 79.99,
+        discount: 0,
+        category: 'Electronics',
+        image: null,
+    },
+    {
+        id: 6,
+        name: 'Wireless Headphones',
+        description: 'Bluetooth headphones with noise cancellation',
+        price: 79.99,
+        discount: 0,
+        category: 'Electronics',
+        image: null,
+    },
+    {
+        id: 7,
+        name: 'Wireless Headphones',
+        description: 'Bluetooth headphones with noise cancellation',
+        price: 79.99,
+        discount: 0,
+        category: 'Electronics',
+        image: null,
     },
 ];
 
 const AdminProductPage = () => {
-    const [products, setProducts] = useState(mockProducts);
-    const [showEditModal, setShowEditModal] = useState(false);
-    const [showAddModal, setShowAddModal] = useState(false);
-    const [selectedProduct, setSelectedProduct] = useState(null);
-    const [newProduct, setNewProduct] = useState({
+    const [products, setProducts] = useState(initialProducts);
+    const [editingProduct, setEditingProduct] = useState(null);
+    const [newProductModal, setNewProductModal] = useState(false);
+
+    const [formData, setFormData] = useState({
         name: '',
-        price: '',
-        category: '',
         description: '',
-        image: '',
+        price: '',
+        discount: '',
+        category: '',
+        image: null,
     });
 
-    const handleEdit = (product) => {
-        setSelectedProduct(product);
-        setShowEditModal(true);
+    const handleInputChange = (e) => {
+        const { name, value, files } = e.target;
+        setFormData((prev) => ({
+            ...prev,
+            [name]: files ? files[0] : value,
+        }));
     };
 
-    const handleUpdate = () => {
-        setProducts(products.map((p) => (p.id === selectedProduct.id ? selectedProduct : p)));
-        setShowEditModal(false);
+    const openEditModal = (product) => {
+        setEditingProduct(product);
+        setFormData(product);
     };
 
-    const handleAddProduct = () => {
-        const id = products.length + 1;
-        setProducts([...products, { ...newProduct, id }]);
-        setNewProduct({ name: '', price: '', category: '', description: '', image: '' });
-        setShowAddModal(false);
+    const saveEditedProduct = () => {
+        setProducts((prev) =>
+            prev.map((prod) =>
+                prod.id === editingProduct.id ? { ...formData, id: prod.id } : prod
+            )
+        );
+        setEditingProduct(null);
     };
 
+    const addNewProduct = () => {
+        const newProduct = {
+            ...formData,
+            id: products.length + 1,
+        };
+        setProducts([...products, newProduct]);
+        setFormData({
+            name: '',
+            description: '',
+            price: '',
+            discount: '',
+            category: '',
+            image: null,
+        });
+        setNewProductModal(false);
+    };
+
+    const handleDelete = (productId) => {
+        const confirmDelete = window.confirm('Are you sure you want to delete this product?');
+        if (confirmDelete) {
+            const updatedProducts = products.filter((product) => product.id !== productId);
+            setProducts(updatedProducts);
+        }
+    };
     return (
-        <div className="admin-container">
+        <div className="admin-product-container">
             <div className="header">
-                <h2>Admin Products</h2>
-                <button onClick={() => setShowAddModal(true)} className="add-btn">+ Add New Product</button>
+                <h2>Product Management</h2>
+                <button className="add-btn" onClick={() => setNewProductModal(true)}>
+                    + Add New Product
+                </button>
             </div>
 
             <div className="product-grid">
                 {products.map((product) => (
-                    <div className="product-card" key={product.id}>
-                        <img src={product.image} alt={product.name} />
-                        <div className="info">
-                            <h3>{product.name}</h3>
-                            <p className="price">${product.price}</p>
-                            <p className="category">{product.category}</p>
-                            <button onClick={() => handleEdit(product)} className="edit-btn">Edit product</button>
-                            <button onClick={() => handleDelete(product)}>Delete Product</button>
+                    <div key={product.id} className="product-card">
+                        <div className="card-img-placeholder">
+                            {product.image ? (
+                                <img
+                                    src={URL.createObjectURL(product.image)}
+                                    alt={product.name}
+                                />
+                            ) : (
+                                <span>No Image</span>
+                            )}
+                        </div>
+                        <h3>{product.name}</h3>
+                        <p className="desc">{product.description}</p>
+                        <p className="price">
+                            ${product.price}
+                            {product.discount > 0 && (
+                                <span className="discount"> (−{product.discount}%)</span>
+                            )}
+                        </p>
+                        <p className="category">Category: {product.category}</p>
+                        <div className="btn-group">
+                            <button className="edit-btn" onClick={() => openEditModal(product)}>
+                                Edit
+                            </button>
+                            <button className="delete-btn" onClick={() => handleDelete(product.id)}>
+                                Delete
+                            </button>
                         </div>
                     </div>
                 ))}
             </div>
 
-            {/* Edit Modal */}
-            {showEditModal && (
+
+            {/* Edit Product Modal */}
+            {editingProduct && (
                 <div className="modal-overlay">
                     <div className="modal">
                         <h3>Edit Product</h3>
-                        <input value={selectedProduct.name} onChange={(e) => setSelectedProduct({ ...selectedProduct, name: e.target.value })} placeholder="Name" />
-                        <input value={selectedProduct.price} onChange={(e) => setSelectedProduct({ ...selectedProduct, price: e.target.value })} placeholder="Price" />
-                        <input value={selectedProduct.category} onChange={(e) => setSelectedProduct({ ...selectedProduct, category: e.target.value })} placeholder="Category" />
-                        <input value={selectedProduct.description} onChange={(e) => setSelectedProduct({ ...selectedProduct, description: e.target.value })} placeholder="Description" />
-                        <input value={selectedProduct.image} onChange={(e) => setSelectedProduct({ ...selectedProduct, image: e.target.value })} placeholder="Image URL" />
+                        <input
+                            type="text"
+                            name="name"
+                            placeholder="Product Name"
+                            value={formData.name}
+                            onChange={handleInputChange}
+                        />
+                        <textarea
+                            name="description"
+                            placeholder="Description"
+                            value={formData.description}
+                            onChange={handleInputChange}
+                        />
+                        <input
+                            type="number"
+                            name="price"
+                            placeholder="Price"
+                            value={formData.price}
+                            onChange={handleInputChange}
+                        />
+                        <input
+                            type="number"
+                            name="discount"
+                            placeholder="Discount %"
+                            value={formData.discount}
+                            onChange={handleInputChange}
+                        />
+                        <select
+                            name="category"
+                            value={formData.category}
+                            onChange={handleInputChange}
+                        >
+                            <option value="">-- Select Category --</option>
+                            {categories.map((cat) => (
+                                <option key={cat}>{cat}</option>
+                            ))}
+                        </select>
+                        <input type="file" name="image" onChange={handleInputChange} />
                         <div className="modal-actions">
-                            <button onClick={handleUpdate}>Save</button>
-                            <button onClick={() => setShowEditModal(false)}>Cancel</button>
+                            <button onClick={saveEditedProduct}>Save</button>
+                            <button onClick={() => setEditingProduct(null)}>Cancel</button>
                         </div>
                     </div>
                 </div>
             )}
 
-            {/* Add Modal */}
-            {showAddModal && (
+            {/* Add New Product Modal */}
+            {newProductModal && (
                 <div className="modal-overlay">
                     <div className="modal">
                         <h3>Add New Product</h3>
-                        <input value={newProduct.name} onChange={(e) => setNewProduct({ ...newProduct, name: e.target.value })} placeholder="Name" />
-                        <input value={newProduct.price} onChange={(e) => setNewProduct({ ...newProduct, price: e.target.value })} placeholder="Price" />
-                        <input value={newProduct.category} onChange={(e) => setNewProduct({ ...newProduct, category: e.target.value })} placeholder="Category" />
-                        <input value={newProduct.description} onChange={(e) => setNewProduct({ ...newProduct, description: e.target.value })} placeholder="Description" />
-                        <input value={newProduct.image} onChange={(e) => setNewProduct({ ...newProduct, image: e.target.value })} placeholder="Image URL" />
+                        <input
+                            type="text"
+                            name="name"
+                            placeholder="Product Name"
+                            value={formData.name}
+                            onChange={handleInputChange}
+                        />
+                        <textarea
+                            name="description"
+                            placeholder="Description"
+                            value={formData.description}
+                            onChange={handleInputChange}
+                        />
+                        <input
+                            type="number"
+                            name="price"
+                            placeholder="Price"
+                            value={formData.price}
+                            onChange={handleInputChange}
+                        />
+                        <input
+                            type="number"
+                            name="discount"
+                            placeholder="Discount %"
+                            value={formData.discount}
+                            onChange={handleInputChange}
+                        />
+                        <select
+                            name="category"
+                            value={formData.category}
+                            onChange={handleInputChange}
+                        >
+                            <option value="">-- Select Category --</option>
+                            {categories.map((cat) => (
+                                <option key={cat}>{cat}</option>
+                            ))}
+                        </select>
+                        <input type="file" name="image" onChange={handleInputChange} />
                         <div className="modal-actions">
-                            <button onClick={handleAddProduct}>Add</button>
-                            <button onClick={() => setShowAddModal(false)}>Cancel</button>
+                            <button onClick={addNewProduct}>Add</button>
+                            <button onClick={() => setNewProductModal(false)}>Cancel</button>
                         </div>
                     </div>
                 </div>
