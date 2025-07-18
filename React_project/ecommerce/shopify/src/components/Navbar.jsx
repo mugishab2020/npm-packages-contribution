@@ -26,11 +26,19 @@ const Navbar = () => {
 
             <div className="nav-right">
                 <ul className="nav-links">
-                    <li>
-                        <Link to="/">
-                            <FaHome className="nav-icon" />Home
-                        </Link>
-                    </li>
+                    {user?.role === 'admin' ? (
+                        <li>
+                            <Link to="/dashboard">
+                                <FaTachometerAlt className="nav-icon" />Dashboard
+                            </Link>
+                        </li>
+                    ) : (
+                        <li>
+                            <Link to="/">
+                                <FaHome className="nav-icon" />Home
+                            </Link>
+                        </li>
+                    )}
                     <li>
                         <Link to="/products">
                             <FaBoxOpen className="nav-icon" />Products
@@ -43,13 +51,7 @@ const Navbar = () => {
                             </Link>
                         </li>
                     )}
-                    {user?.role === 'admin' ? (
-                        <li>
-                            <Link to="/dashboard">
-                                <FaTachometerAlt className="nav-icon" />Dashboard
-                            </Link>
-                        </li>
-                    ) : (
+                    {user?.role !== 'admin' && (
                         <li>
                             <Link to="/services">
                                 <FaConciergeBell className="nav-icon" />Services
@@ -57,6 +59,7 @@ const Navbar = () => {
                         </li>
                     )}
                 </ul>
+
 
                 <div className="search-profile">
                     <div className="search-container">

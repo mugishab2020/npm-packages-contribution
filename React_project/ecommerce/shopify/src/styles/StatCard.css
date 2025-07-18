@@ -1,0 +1,37 @@
+/* StatCard.css */
+.stat-card {
+    display: flex;
+    align-items: center;
+    background-color: #ffffff;
+    padding: 1rem;
+    border-radius: 1rem;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.stat-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+}
+
+.stat-icon {
+    padding: 0.75rem;
+    border-radius: 9999px;
+    background-color: #f3f4f6;
+    margin-right: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.stat-text h4 {
+    font-size: 0.875rem;
+    color: #6b7280;
+    margin: 0;
+}
+
+.stat-text p {
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin: 0.25rem 0 0 0;
+}

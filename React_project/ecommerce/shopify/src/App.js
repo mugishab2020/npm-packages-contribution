@@ -20,6 +20,7 @@ import CartPage from './pages/CartPage';
 import "./App.css"
 import OrdersPage from './pages/OrdersPage';
 import CheckoutPage from './pages/CheckoutPage';
+import AdminProductPage from './pages/AdminProduct';
 
 function App() {
   return (
@@ -35,12 +36,11 @@ function App() {
             <Route path="/cart" element={<CartPage />} />
             <Route path='/orders' element={<OrdersPage />} />
             <Route path='/checkout' element={<CheckoutPage />} />
+            <Route path="/admin/product" element={<AdminProductPage />} />
             <Route
               path="/dashboard"
               element={
-                <PrivateRoute allowedRoles={['admin']}>
                   <DashboardPage />
-                </PrivateRoute>
               }
             />
             <Route path="/login" element={<LoginPage />} />
