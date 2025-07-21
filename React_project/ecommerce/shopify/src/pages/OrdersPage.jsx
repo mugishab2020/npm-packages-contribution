@@ -7,7 +7,7 @@ const mockOrders = [
     {
         id: 'ORD12345',
         date: '2025-07-01',
-        status: 'Shipped',
+        status: 'Pending',
         total: 150.75,
         items: [
             { id: 1, name: 'Leather Bag', quantity: 1 },
@@ -18,6 +18,15 @@ const mockOrders = [
         id: 'ORD12346',
         date: '2025-07-10',
         status: 'Pending',
+        total: 75.00,
+        items: [
+            { id: 3, name: 'Earbuds Pro', quantity: 1 },
+        ],
+    },
+    {
+        id: 'ORD12346',
+        date: '2025-07-10',
+        status: 'Delivering',
         total: 75.00,
         items: [
             { id: 3, name: 'Earbuds Pro', quantity: 1 },
@@ -65,6 +74,15 @@ const OrdersPage = () => {
                             <div className="order-total">
                                 <strong>Total:</strong> {order.total.toFixed(2)} K rwf
                             </div>
+                            {order.status.toLowerCase() === 'delivering' && (
+                                <div className="received-button">
+                                    <button className="done-btn" onClick={() => alert(`Order ${order.id} marked as received.`)}>
+                                        Mark as Received
+                                    </button>
+                                </div>
+
+                            )
+                            }
                         </div>
                     ))}
                 </div>

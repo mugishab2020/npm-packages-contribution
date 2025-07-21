@@ -12,7 +12,6 @@ import ProductDetailPage from './pages/ProductDetailPage';
 import DashboardPage from './pages/DashboardPage';
 import LoginPage from './pages/LoginPage';
 import NotFoundPage from './pages/NotFoundPage';
-import PrivateRoute from './components/PrivateRoute';
 import SignupPage from './pages/Signup';
 import ServicesPage from './pages/Services';
 import CartPage from './pages/CartPage';
@@ -21,6 +20,7 @@ import "./App.css"
 import OrdersPage from './pages/OrdersPage';
 import CheckoutPage from './pages/CheckoutPage';
 import AdminProductPage from './pages/AdminProduct';
+import AdminOrders from './pages/AdminOrdersPage';
 
 function App() {
   return (
@@ -37,6 +37,8 @@ function App() {
             <Route path='/orders' element={<OrdersPage />} />
             <Route path='/checkout' element={<CheckoutPage />} />
             <Route path="/admin/product" element={<AdminProductPage />} />
+            <Route path="/admin/orders" element={<AdminOrders />} />
+
             <Route
               path="/dashboard"
               element={

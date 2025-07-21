@@ -32,7 +32,7 @@ const Navbar = () => {
         <nav className="navbar">
             <div className="logo">
                 <Link to="/">
-                    Shop<span className="ify">ify</span>
+                    <img src="/Shopify-logo.png" alt="Shopify Logo" className="logo-img" />
                 </Link>
             </div>
 
@@ -59,7 +59,7 @@ const Navbar = () => {
                     </li>
                     {user && (
                         <li>
-                            <Link to="/orders">
+                            <Link to={user?.role === 'admin' ? '/admin/orders' : '/orders'}>
                                 <FaClipboardList className="nav-icon" />Orders
                             </Link>
                         </li>

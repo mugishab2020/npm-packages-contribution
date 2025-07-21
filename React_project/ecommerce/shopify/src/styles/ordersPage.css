@@ -115,6 +115,18 @@
     user-select: none;
 }
 
+.received-button {
+    display: flex;
+    justify-content: center;
+    margin-top: 1rem;
+
+}
+
+.received-button .done-btn {
+    background-color: #014f86;
+    color: white;
+}
+
 /* Responsive tweaks */
 @media (max-width: 600px) {
     .order-header {

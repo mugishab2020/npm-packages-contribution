@@ -12,6 +12,18 @@
     transition-delay: 1s;
 }
 
+.logo .logo-img {
+    height: 80px;
+    width: 80px;
+    border-radius: 40%;
+}
+
+.logo .logo-img:hover {
+    height: 70px;
+    width: 70px;
+    overflow: hidden;
+}
+
 .logo a {
     font-size: 1.8rem;
     font-weight: bold;

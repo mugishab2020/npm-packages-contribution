@@ -1,0 +1,52 @@
+.admin-orders {
+    padding: 30px;
+    font-family: Arial, sans-serif;
+}
+
+.admin-orders h2 {
+    margin-bottom: 20px;
+    font-size: 24px;
+}
+
+.orders-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.orders-table th,
+.orders-table td {
+    padding: 12px 15px;
+    border: 1px solid #ddd;
+    text-align: center;
+}
+
+.orders-table th {
+    background-color: #f8f8f8;
+    font-weight: bold;
+}
+
+.done-button {
+    padding: 6px 12px;
+    background-color: #00b894;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.done-button:hover {
+    background-color: #019875;
+}
+
+.status {
+    font-weight: 500;
+}
+
+.delivered-text {
+    color: #0984e3;
+    font-weight: bold;
+}
+
+.delivering {
+    background-color: #f1f8ff;
+}
