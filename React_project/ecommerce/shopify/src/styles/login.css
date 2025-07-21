@@ -6,8 +6,6 @@
     overflow: hidden;
     border-radius: 30px;
 }
-
-/* Left section animation */
 @keyframes fadeInLeft {
     0% {
         opacity: 0;
@@ -45,7 +43,6 @@
     opacity: 0.9;
 }
 
-/* Right section form animation */
 @keyframes fadeInUp {
     0% {
         opacity: 0;
