@@ -14,6 +14,7 @@ const SignupPage = () => {
         age: '',
         address: '',
         gender: '',
+        role: ''
     });
 
     const [error, setError] = useState('');
@@ -99,6 +100,17 @@ const SignupPage = () => {
                         <option value="male">Male</option>
                         <option value="female">Female</option>
                         <option value="other">Other</option>
+                    </select>
+                    <select
+                        value={form.role}
+                        onChange={handleChange}
+                        name='role'
+                        required
+                        style={{ padding: '0.9rem', margin: '0.6rem 0', borderRadius: '10px', border: '1px solid #ccc', fontSize: '1rem' }}
+                    >
+                        <option value="" disabled>Role</option>
+                        <option value="user">User</option>
+                        <option value="admin">Admin</option>
                     </select>
 
                     <input
