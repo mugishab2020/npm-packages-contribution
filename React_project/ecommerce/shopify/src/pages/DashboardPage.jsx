@@ -1,15 +1,52 @@
 import React from "react";
 import StatCard from "../components/StatCard";
 import SalesChart from "../components/SalesChart";
+import { useEffect, useState } from "react";
+import axiosInstance from "../utils/AxiosInstance";
 import "../styles/DashboardPage.css";
 
 const DashboardPage = () => {
-    const stats = {
-        totalOrders: 124,
-        totalRevenue: "$15,230",
-        totalCustomers: 89,
-        totalProducts: 45,
-    };
+    const [stats, setStats] = useState({
+        totalOrders: 0,
+        totalRevenue: "$0",
+        totalCustomers: 0,
+        totalProducts: 0,
+    });
+
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        const fetchStats = async () => {
+            try {
+                const [
+                    ordersRes,
+                    revenueRes,
+                    customersRes,
+                    productsRes
+                ] = await Promise.all([
+                    axiosInstance.get('/admin/order_number'),
+                    axiosInstance.get('/admin/revenue'),
+                    axiosInstance.get('/admin/customernumber'),
+                    axiosInstance.get('/admin/product_number'),
+                ]);
+
+                setStats({
+                    totalOrders: ordersRes.data.count,
+                    totalRevenue: `${revenueRes.data.totalRevenue.total_revenue} rwf`,
+                    totalCustomers: customersRes.data.count,
+                    totalProducts: productsRes.data.count,
+                });
+
+            } catch (error) {
+                console.error("Failed to fetch dashboard stats:", error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchStats();
+    }, []);
+
 
     const categoryRevenue = [
         { category: "Electronics", revenue: "$5,000" },

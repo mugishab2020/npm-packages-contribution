@@ -21,6 +21,7 @@ import OrdersPage from './pages/OrdersPage';
 import CheckoutPage from './pages/CheckoutPage';
 import AdminProductPage from './pages/AdminProduct';
 import AdminOrders from './pages/AdminOrdersPage';
+import ProfilePage from './pages/ProfilePage';  // Import ProfilePage
 
 function App() {
   return (
@@ -30,6 +31,7 @@ function App() {
         <div className="content-wrapper">
           <Routes>
             <Route path="/" element={<HomePage />} />
+            <Route path="/profile" element={<ProfilePage />} />  {/* Add ProfilePage route */}
             <Route path="/products" element={<ProductsPage />} />
             <Route path="/products/:id" element={<ProductDetailPage />} />
             <Route path="/services" element={<ServicesPage />} />

@@ -40,7 +40,6 @@ const OrdersPage = () => {
 
     useEffect(() => {
         if (user) {
-            // Replace this with real API call to fetch user's orders
             setOrders(mockOrders);
         }
     }, [user]);

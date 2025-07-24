@@ -10,9 +10,9 @@ const LoginPage = () => {
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        const user = login(email, password);
+        const user = await login(email, password)
         if (user) {
             navigate(user.role === 'admin' ? '/services' : '/');
         } else {
