@@ -1,90 +1,95 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import axiosInstance from '../utils/AxiosInstance';
 import '../styles/AdminProductPage.css';
 
-const categories = ['Electronics', 'Books', 'Clothing', 'Home', 'Sports'];
-
-const initialProducts = [
-    {
-        id: 1,
-        name: 'Wireless Headphones',
-        description: 'Bluetooth headphones with noise cancellation',
-        price: 79.99,
-        discount: 0,
-        category: 'Electronics',
-        image: null,
-    },
-    {
-        id: 2,
-        name: 'Wireless Headphones',
-        description: 'Bluetooth headphones with noise cancellation',
-        price: 79.99,
-        discount: 0,
-        category: 'Electronics',
-        image: null,
-    },
-    {
-        id: 3,
-        name: 'Wireless Headphones',
-        description: 'Bluetooth headphones with noise cancellation',
-        price: 79.99,
-        discount: 0,
-        category: 'Electronics',
-        image: null,
-    },
-    {
-        id: 4,
-        name: 'Wireless Headphones',
-        description: 'Bluetooth headphones with noise cancellation',
-        price: 79.99,
-        discount: 0,
-        category: 'Electronics',
-        image: null,
-    },
-    {
-        id: 5,
-        name: 'Wireless Headphones',
-        description: 'Bluetooth headphones with noise cancellation',
-        price: 79.99,
-        discount: 0,
-        category: 'Electronics',
-        image: null,
-    },
-    {
-        id: 6,
-        name: 'Wireless Headphones',
-        description: 'Bluetooth headphones with noise cancellation',
-        price: 79.99,
-        discount: 0,
-        category: 'Electronics',
-        image: null,
-    },
-    {
-        id: 7,
-        name: 'Wireless Headphones',
-        description: 'Bluetooth headphones with noise cancellation',
-        price: 79.99,
-        discount: 0,
-        category: 'Electronics',
-        image: null,
-    },
-];
-
 const AdminProductPage = () => {
-    const [products, setProducts] = useState(initialProducts);
+    const [products, setProducts] = useState([]);
     const [editingProduct, setEditingProduct] = useState(null);
     const [newProductModal, setNewProductModal] = useState(false);
+    const [categories, setCategories] = useState([]);
+    const [subcategories, setSubcategories] = useState([]);
 
     const [formData, setFormData] = useState({
         name: '',
         description: '',
         price: '',
         discount: '',
-        category: '',
+        categoryId: '',    // Store category id
+        subcategoryId: '', // Store subcategory id
         image: null,
+        production_date: '',
+        expiration_date: '',
     });
+
+    useEffect(() => {
+        fetchProducts();
+        fetchCategories();
+    }, []);
+
+    const fetchProducts = async () => {
+        try {
+            const res = await axiosInstance.get('/admin/products');
+            const items = res.data.Products.items;
+
+            const mapped = items.map((product) => ({
+                id: product.id,
+                name: product.name,
+                description: product.description,
+                price: product.price,
+                stock: product.stock,
+                production_date: product.production_date,
+                expiration_date: product.expiration_date,
+                discount: 0,
+                category: product.Category?.category_name || 'Uncategorized',
+                subcategory: product.SubCategory?.subcategory_name || '',
+                image: null,
+            }));
+
+            setProducts(mapped);
+        } catch (err) {
+            console.error('Failed to fetch products:', err.message);
+        }
+    };
+
+    const fetchCategories = async () => {
+        try {
+            const res = await axiosInstance.get('/admin/categories');
+            const categories = res.data.categories.items;
+            setCategories(categories);
+        } catch (err) {
+            console.error('Failed to fetch categories:', err.message);
+        }
+    };
+
+    const fetchSubcategories = async (categoryId) => {
+        try {
+            const res = await axiosInstance.get(`/admin/subcategories/${categoryId}`);
+            const items = res.data.subcategories?.items || [];
+            setSubcategories(items);
+        } catch (err) {
+            console.error('Failed to fetch subcategories:', err.message);
+            setSubcategories([]);
+        }
+    };
 
     const handleInputChange = (e) => {
         const { name, value, files } = e.target;
+
+        if (name === 'categoryId') {
+            const selectedCategory = categories.find(cat => cat.id === value);
+            if (selectedCategory) {
+                fetchSubcategories(selectedCategory.id);
+            } else {
+                setSubcategories([]);
+            }
+            setFormData((prev) => ({
+                ...prev,
+                categoryId: value,
+                subcategoryId: '', // Reset subcategory on category change
+            }));
+            return;
+        }
+
         setFormData((prev) => ({
             ...prev,
             [name]: files ? files[0] : value,
@@ -92,8 +97,16 @@ const AdminProductPage = () => {
     };
 
     const openEditModal = (product) => {
+        // Map category and subcategory names to their ids for editing
+        const categoryObj = categories.find(cat => cat.category_name === product.category);
+        const subcategoryObj = subcategories.find(sub => sub.subcategory_name === product.subcategory);
+
+        setFormData({
+            ...product,
+            categoryId: categoryObj ? categoryObj.id : '',
+            subcategoryId: subcategoryObj ? subcategoryObj.id : '',
+        });
         setEditingProduct(product);
-        setFormData(product);
     };
 
     const saveEditedProduct = () => {
@@ -105,21 +118,28 @@ const AdminProductPage = () => {
         setEditingProduct(null);
     };
 
-    const addNewProduct = () => {
-        const newProduct = {
-            ...formData,
-            id: products.length + 1,
-        };
-        setProducts([...products, newProduct]);
-        setFormData({
-            name: '',
-            description: '',
-            price: '',
-            discount: '',
-            category: '',
-            image: null,
-        });
-        setNewProductModal(false);
+    const addNewProduct = async () => {
+        try {
+            const payload = {
+                name: formData.name,
+                price: formData.price,
+                description: formData.description,
+                categoryId: formData.categoryId,
+                subcategoryId: formData.subcategoryId,
+                production_date: formData.production_date,
+                expiration_date: formData.expiration_date,
+            };
+
+            const response = await axiosInstance.post('/admin/add-product', payload);
+            const createdProduct = response.data.product;
+
+            setProducts((prev) => [...prev, createdProduct]);
+
+            resetForm();
+            setNewProductModal(false);
+        } catch (error) {
+            console.error('Failed to add new product:', error.message);
+        }
     };
 
     const handleDelete = (productId) => {
@@ -129,6 +149,109 @@ const AdminProductPage = () => {
             setProducts(updatedProducts);
         }
     };
+
+    const resetForm = () => {
+        setFormData({
+            name: '',
+            description: '',
+            price: '',
+            discount: '',
+            categoryId: '',
+            subcategoryId: '',
+            image: null,
+            production_date: '',
+            expiration_date: '',
+        });
+        setSubcategories([]);
+    };
+
+    // --- Modal JSX Generator ---
+    const renderProductForm = (onSubmit, onCancel, title, isEdit = false) => (
+        <div className="modal-overlay">
+            <div className="modal">
+                <h3>{title}</h3>
+                <input
+                    type="text"
+                    name="name"
+                    placeholder="Product Name"
+                    value={formData.name}
+                    onChange={handleInputChange}
+                />
+                <textarea
+                    name="description"
+                    placeholder="Description"
+                    value={formData.description}
+                    onChange={handleInputChange}
+                />
+                <input
+                    type="number"
+                    name="price"
+                    placeholder="Price"
+                    value={formData.price}
+                    onChange={handleInputChange}
+                />
+                <input
+                    type="number"
+                    name="discount"
+                    placeholder="Discount %"
+                    value={formData.discount}
+                    onChange={handleInputChange}
+                />
+                <select
+                    name="categoryId"
+                    value={formData.categoryId}
+                    onChange={handleInputChange}
+                >
+                    <option value="">-- Select Category --</option>
+                    {categories.map((cat) => (
+                        <option key={cat.id} value={cat.id}>
+                            {cat.category_name}
+                        </option>
+                    ))}
+                </select>
+
+                {/* Show subcategory only if category is selected */}
+                {formData.categoryId && (
+                    <select
+                        name="subcategoryId"
+                        value={formData.subcategoryId}
+                        onChange={handleInputChange}
+                        disabled={!subcategories.length}
+                    >
+                        <option value="">-- Select Subcategory --</option>
+                        {subcategories.map((sub) => (
+                            <option key={sub.id} value={sub.id}>
+                                {sub.subcategory_name}
+                            </option>
+                        ))}
+                    </select>
+                )}
+
+                <input type="file" name="image" onChange={handleInputChange} />
+
+                <input
+                    type="date"
+                    name="production_date"
+                    value={formData.production_date}
+                    onChange={handleInputChange}
+                    placeholder="Production Date"
+                />
+                <input
+                    type="date"
+                    name="expiration_date"
+                    value={formData.expiration_date}
+                    onChange={handleInputChange}
+                    placeholder="Expiration Date"
+                />
+
+                <div className="modal-actions">
+                    <button onClick={onSubmit}>{isEdit ? 'Save' : 'Add'}</button>
+                    <button onClick={onCancel}>Cancel</button>
+                </div>
+            </div>
+        </div>
+    );
+
     return (
         <div className="admin-product-container">
             <div className="header">
@@ -138,28 +261,56 @@ const AdminProductPage = () => {
                 </button>
             </div>
 
-            <div className="product-grid">
+            <div className="product-list">
                 {products.map((product) => (
                     <div key={product.id} className="product-card">
                         <div className="card-img-placeholder">
                             {product.image ? (
-                                <img
-                                    src={URL.createObjectURL(product.image)}
-                                    alt={product.name}
-                                />
+                                <img src={URL.createObjectURL(product.image)} alt={product.name} />
                             ) : (
                                 <span>No Image</span>
                             )}
                         </div>
-                        <h3>{product.name}</h3>
-                        <p className="desc">{product.description}</p>
-                        <p className="price">
-                            ${product.price}
-                            {product.discount > 0 && (
-                                <span className="discount"> (−{product.discount}%)</span>
-                            )}
-                        </p>
-                        <p className="category">Category: {product.category}</p>
+
+                        <div className="product-details">
+                            <h3>{product.name}</h3>
+                            <div className="info-row">
+                                <strong>Description</strong>
+                                <p>{product.description}</p>
+                            </div>
+
+
+                            <div className="info-row">
+                                <strong>Price:</strong> {product.price} Rwf
+                                {product.discount > 0 && (
+                                    <span className="discount"> (−{product.discount}%)</span>
+                                )}
+                            </div>
+
+                            <div className="info-row">
+                                <strong>Stock:</strong> {product.stock || "N/A"}
+                            </div>
+
+                            <div className="info-row">
+                                <strong>Category:</strong> {product.category}
+                                {product.subcategory && ` → ${product.subcategory}`}
+                            </div>
+
+                            <div className="info-row">
+                                <strong>Production Date:</strong>{" "}
+                                {product.production_date
+                                    ? new Date(product.production_date).toLocaleDateString()
+                                    : "N/A"}
+                            </div>
+
+                            <div className="info-row">
+                                <strong>Expiration Date:</strong>{" "}
+                                {product.expiration_date
+                                    ? new Date(product.expiration_date).toLocaleDateString()
+                                    : "N/A"}
+                            </div>
+                        </div>
+
                         <div className="btn-group">
                             <button className="edit-btn" onClick={() => openEditModal(product)}>
                                 Edit
@@ -172,108 +323,10 @@ const AdminProductPage = () => {
                 ))}
             </div>
 
-
-            {/* Edit Product Modal */}
-            {editingProduct && (
-                <div className="modal-overlay">
-                    <div className="modal">
-                        <h3>Edit Product</h3>
-                        <input
-                            type="text"
-                            name="name"
-                            placeholder="Product Name"
-                            value={formData.name}
-                            onChange={handleInputChange}
-                        />
-                        <textarea
-                            name="description"
-                            placeholder="Description"
-                            value={formData.description}
-                            onChange={handleInputChange}
-                        />
-                        <input
-                            type="number"
-                            name="price"
-                            placeholder="Price"
-                            value={formData.price}
-                            onChange={handleInputChange}
-                        />
-                        <input
-                            type="number"
-                            name="discount"
-                            placeholder="Discount %"
-                            value={formData.discount}
-                            onChange={handleInputChange}
-                        />
-                        <select
-                            name="category"
-                            value={formData.category}
-                            onChange={handleInputChange}
-                        >
-                            <option value="">-- Select Category --</option>
-                            {categories.map((cat) => (
-                                <option key={cat}>{cat}</option>
-                            ))}
-                        </select>
-                        <input type="file" name="image" onChange={handleInputChange} />
-                        <div className="modal-actions">
-                            <button onClick={saveEditedProduct}>Save</button>
-                            <button onClick={() => setEditingProduct(null)}>Cancel</button>
-                        </div>
-                    </div>
-                </div>
-            )}
-
-            {/* Add New Product Modal */}
-            {newProductModal && (
-                <div className="modal-overlay">
-                    <div className="modal">
-                        <h3>Add New Product</h3>
-                        <input
-                            type="text"
-                            name="name"
-                            placeholder="Product Name"
-                            value={formData.name}
-                            onChange={handleInputChange}
-                        />
-                        <textarea
-                            name="description"
-                            placeholder="Description"
-                            value={formData.description}
-                            onChange={handleInputChange}
-                        />
-                        <input
-                            type="number"
-                            name="price"
-                            placeholder="Price"
-                            value={formData.price}
-                            onChange={handleInputChange}
-                        />
-                        <input
-                            type="number"
-                            name="discount"
-                            placeholder="Discount %"
-                            value={formData.discount}
-                            onChange={handleInputChange}
-                        />
-                        <select
-                            name="category"
-                            value={formData.category}
-                            onChange={handleInputChange}
-                        >
-                            <option value="">-- Select Category --</option>
-                            {categories.map((cat) => (
-                                <option key={cat}>{cat}</option>
-                            ))}
-                        </select>
-                        <input type="file" name="image" onChange={handleInputChange} />
-                        <div className="modal-actions">
-                            <button onClick={addNewProduct}>Add</button>
-                            <button onClick={() => setNewProductModal(false)}>Cancel</button>
-                        </div>
-                    </div>
-                </div>
-            )}
+            {/* Modals */}
+            {editingProduct &&
+                renderProductForm(saveEditedProduct, () => setEditingProduct(null), 'Edit Product', true)}
+            {newProductModal && renderProductForm(addNewProduct, () => setNewProductModal(false), 'Add New Product')}
         </div>
     );
 };

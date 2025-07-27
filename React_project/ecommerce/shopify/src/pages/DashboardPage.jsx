@@ -1,7 +1,6 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import StatCard from "../components/StatCard";
 import SalesChart from "../components/SalesChart";
-import { useEffect, useState } from "react";
 import axiosInstance from "../utils/AxiosInstance";
 import "../styles/DashboardPage.css";
 
@@ -13,6 +12,8 @@ const DashboardPage = () => {
         totalProducts: 0,
     });
 
+    const [categoryStats, setCategoryStats] = useState([]);
+    const [recentOrders, setRecentOrders] = useState([]);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
@@ -22,12 +23,14 @@ const DashboardPage = () => {
                     ordersRes,
                     revenueRes,
                     customersRes,
-                    productsRes
+                    productsRes,
+                    categoryRes
                 ] = await Promise.all([
                     axiosInstance.get('/admin/order_number'),
                     axiosInstance.get('/admin/revenue'),
                     axiosInstance.get('/admin/customernumber'),
                     axiosInstance.get('/admin/product_number'),
+                    axiosInstance.get('/admin/category-stats')
                 ]);
 
                 setStats({
@@ -36,6 +39,8 @@ const DashboardPage = () => {
                     totalCustomers: customersRes.data.count,
                     totalProducts: productsRes.data.count,
                 });
+
+                setCategoryStats(categoryRes.data.data);
 
             } catch (error) {
                 console.error("Failed to fetch dashboard stats:", error);
@@ -47,28 +52,20 @@ const DashboardPage = () => {
         fetchStats();
     }, []);
 
+    useEffect(() => {
+        const fetchRecentOrders = async () => {
+            try {
+                const response = await axiosInstance.get('/admin/recent_orders');
+                setRecentOrders(response.data.orders);
+            } catch (error) {
+                console.error('Failed to fetch recent orders:', error);
+            } finally {
+                setLoading(false);
+            }
+        };
 
-    const categoryRevenue = [
-        { category: "Electronics", revenue: "$5,000" },
-        { category: "Clothing", revenue: "$3,200" },
-        { category: "Home Decor", revenue: "$2,150" },
-        { category: "Books", revenue: "$1,800" },
-    ];
-
-    const stockByCategory = [
-        { category: "Electronics", stock: 32 },
-        { category: "Clothing", stock: 57 },
-        { category: "Home Decor", stock: 28 },
-        { category: "Books", stock: 13 },
-    ];
-
-    const recentOrders = [
-        { id: "#001", customer: "Alice", total: "$150", date: "2025-07-15", itemNumber: "4" },
-        { id: "#002", customer: "Bob", total: "$320", date: "2025-07-15", itemNumber: "4" },
-        { id: "#003", customer: "Clara", total: "$200", date: "2025-07-14", itemNumber: "4" },
-        { id: "#004", customer: "David", total: "$410", date: "2025-07-14", itemNumber: "4" },
-        { id: "#005", customer: "Eva", total: "$90", date: "2025-07-13", itemNumber: "4" },
-    ];
+        fetchRecentOrders();
+    }, []);
 
     return (
         <div className="dashboard-container">
@@ -87,7 +84,7 @@ const DashboardPage = () => {
                 <div className="stock-by-category">
                     <h3>Stock by Category</h3>
                     <ul>
-                        {stockByCategory.map((item, index) => (
+                        {categoryStats.map((item, index) => (
                             <li key={index}>
                                 <span>{item.category}</span>
                                 <span>{item.stock} in stock</span>
@@ -101,7 +98,7 @@ const DashboardPage = () => {
                 <div className="category-breakdown">
                     <h3>Revenue by Category</h3>
                     <ul className="category-list">
-                        {categoryRevenue.map((item, index) => (
+                        {categoryStats.map((item, index) => (
                             <li key={index}>
                                 <span>{item.category}</span>
                                 <span>{item.revenue}</span>
