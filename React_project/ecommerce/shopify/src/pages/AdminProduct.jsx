@@ -109,13 +109,43 @@ const AdminProductPage = () => {
         setEditingProduct(product);
     };
 
-    const saveEditedProduct = () => {
-        setProducts((prev) =>
-            prev.map((prod) =>
-                prod.id === editingProduct.id ? { ...formData, id: prod.id } : prod
-            )
-        );
-        setEditingProduct(null);
+    const saveEditedProduct = async () => {
+        try {
+            const payload = {
+                name: formData.name,
+                price: formData.price,
+                description: formData.description,
+                categoryId: formData.categoryId,
+                subcategoryId: formData.subcategoryId,
+                production_date: formData.production_date || null,
+                expiration_date: formData.expiration_date || null
+            };
+
+            const response = await axiosInstance.put(
+                `/admin/edit-product/${editingProduct.id}`,
+                payload
+            );
+
+            const updatedProduct = response.data.product;
+
+            setProducts((prev) =>
+                prev.map((prod) =>
+                    prod.id === updatedProduct.id
+                        ? {
+                            ...prod,
+                            ...updatedProduct,
+                            category: categories.find(cat => cat.id === updatedProduct.categoryId)?.category_name || '',
+                            subcategory: subcategories.find(sub => sub.id === updatedProduct.subcategoryId)?.subcategory_name || '',
+                        }
+                        : prod
+                )
+            );
+
+            setEditingProduct(null);
+            resetForm();
+        } catch (error) {
+            console.error('Failed to update product:', error.message);
+        }
     };
 
     const addNewProduct = async () => {
@@ -142,11 +172,15 @@ const AdminProductPage = () => {
         }
     };
 
-    const handleDelete = (productId) => {
-        const confirmDelete = window.confirm('Are you sure you want to delete this product?');
-        if (confirmDelete) {
-            const updatedProducts = products.filter((product) => product.id !== productId);
-            setProducts(updatedProducts);
+    const handleDelete = async (id) => {
+        if (!window.confirm("Are you sure you want to delete this product?")) return;
+
+        try {
+            await axiosInstance.delete(`/admin/delete-product/${id}`);
+
+            setProducts((prev) => prev.filter((prod) => prod.id !== id));
+        } catch (error) {
+            console.error("Failed to delete product:", error.message);
         }
     };
 
