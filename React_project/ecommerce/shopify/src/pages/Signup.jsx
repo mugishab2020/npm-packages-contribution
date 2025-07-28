@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import axiosInstance from '../utils/AxiosInstance';
 import { useNavigate } from 'react-router-dom';
 import '../styles/login.css';
 
@@ -8,13 +9,14 @@ const SignupPage = () => {
     const [form, setForm] = useState({
         username: '',
         email: '',
+        countryCode: '+250', // Default to Rwanda
         phone: '',
         password: '',
         confirmPassword: '',
         age: '',
         address: '',
         gender: '',
-        role: ''
+        adminsecret: ''
     });
 
     const [error, setError] = useState('');
@@ -24,16 +26,43 @@ const SignupPage = () => {
         setForm(prev => ({ ...prev, [name]: value }));
     };
 
-    const handleSubmit = e => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
+
         if (form.password !== form.confirmPassword) {
             setError("Passwords don't match");
             return;
         }
-        // TODO: send form to backend
-        setError('');
-        alert('Account created! Please log in.');
-        navigate('/login');
+        const fullPhone = `${form.countryCode}${form.phone}`;
+        console.log('Full phone number:', fullPhone);
+        try {
+            const response = await axiosInstance.post('/auth/signup', {
+                username: form.username,
+                email: form.email,
+                phone: fullPhone,
+                address: form.address,
+                age: form.age,
+                password: form.password,
+                gender: form.gender,
+                adminSecret: form.adminsecret || undefined // optional if empty
+            });
+
+            alert(response.data.message);
+            navigate('/login');
+        } catch (err) {
+            if (err.response) {
+                const { error, errors } = err.response.data;
+                if (error) {
+                    setError(error);
+                } else if (errors && errors.length > 0) {
+                    setError(errors[0].msg);
+                } else {
+                    setError("Something went wrong. Please try again.");
+                }
+            } else {
+                setError("Network error. Please try again.");
+            }
+        }
     };
 
     return (
@@ -71,15 +100,38 @@ const SignupPage = () => {
                         onChange={handleChange}
                         required
                     />
-                    <input
-                        type="number"
-                        name="age"
-                        placeholder="Age"
-                        value={form.age}
-                        onChange={handleChange}
-                        min="0"
-                        required
-                    />
+                    <div style={{ display: 'flex', gap: '10px' }}>
+                        <select
+                            name="countryCode"
+                            value={form.countryCode}
+                            onChange={handleChange}
+                            required
+                            style={{
+                                padding: '0.4rem 0.6rem',
+                                width: '120px',
+                                borderRadius: '8px',
+                                border: '1px solid #ccc',
+                                fontSize: '0.85rem',
+                            }}
+                        >
+                            <option value="+250">🇷🇼 Rwanda (+250)</option>
+                            <option value="+254">🇰🇪 Kenya (+254)</option>
+                            <option value="+255">🇹🇿 Tanzania (+255)</option>
+                            <option value="+256">🇺🇬 Uganda (+256)</option>
+                            <option value="+27">🇿🇦 South Africa (+27)</option>
+                            <option value="+1">🇺🇸 USA (+1)</option>
+                        </select>
+
+                        <input
+                            type="tel"
+                            name="phone"
+                            placeholder="Phone (e.g. 788123456)"
+                            value={form.phone}
+                            onChange={handleChange}
+                            required
+                            style={{ flex: 1 }}
+                        />
+                    </div>
                     <input
                         type="text"
                         name="address"
@@ -101,17 +153,17 @@ const SignupPage = () => {
                         <option value="female">Female</option>
                         <option value="other">Other</option>
                     </select>
-                    <select
-                        value={form.role}
+
+                    <input
+                        type='text'
+                        name='age'
+                        placeholder='Age'
+                        value={form.age}
                         onChange={handleChange}
-                        name='role'
                         required
-                        style={{ padding: '0.9rem', margin: '0.6rem 0', borderRadius: '10px', border: '1px solid #ccc', fontSize: '1rem' }}
-                    >
-                        <option value="" disabled>Role</option>
-                        <option value="user">User</option>
-                        <option value="admin">Admin</option>
-                    </select>
+                    />
+                    <br />
+
 
                     <input
                         type="password"
@@ -129,6 +181,14 @@ const SignupPage = () => {
                         onChange={handleChange}
                         required
                     />
+                    <input
+                        type="text"
+                        name="adminsecret"
+                        placeholder="Admin Secret (if you want to be an admin)"
+                        value={form.adminsecret}
+                        onChange={handleChange}
+                    />
+                    <br />
 
                     <button type="submit">Sign Up</button>
 
