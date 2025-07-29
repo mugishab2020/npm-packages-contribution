@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Sidebar from '../components/Sidebar';
 import ProductCard from '../components/ProductCard';
 import axiosInstance from '../utils/AxiosInstance';
+import Loader from '../components/Loader';
 import '../styles/productsPage.css';
 
 const ProductsPage = () => {
@@ -15,7 +16,7 @@ const ProductsPage = () => {
         const fetchProducts = async () => {
             try {
                 const response = await axiosInstance.get('/products');
-                setProducts(response.data.Products.items || []); // adjust key based on actual API response
+                setProducts(response.data.Products.items || []);
             } catch (err) {
                 setError('Failed to load products.');
                 console.error(err);
@@ -28,14 +29,18 @@ const ProductsPage = () => {
     }, []);
 
     const filteredProducts = selectedSubcategory
-        ? products.filter(product => product.subcategory === selectedSubcategory)
+        ? products.filter(product => product.SubCategory?.subcategory_name === selectedSubcategory)
         : products;
 
+    console.log('Filtered Products:', filteredProducts);
+    console.log('Selected Subcategory:', selectedSubcategory);
+    console.log('All Products:', products);
     return (
         <div className="products-page">
-            <Sidebar onSelectSubcategory={setSelectedSubcategory} />
+            <Sidebar onSelectSubcategory={(sub) => setSelectedSubcategory(sub.subcategory_name)} />
+
             <div className="products-container">
-                {loading && <p>Loading products...</p>}
+                {loading && <Loader />}
                 {error && <p className="error">{error}</p>}
                 {!loading && !error && filteredProducts.length === 0 && (
                     <p>No products found in this subcategory.</p>
