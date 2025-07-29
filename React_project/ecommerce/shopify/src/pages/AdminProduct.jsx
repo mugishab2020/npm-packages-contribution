@@ -41,7 +41,6 @@ const AdminProductPage = () => {
 
     const [categoryForm, setCategoryForm] = useState({
         category_name: '',
-        icon: '',
     });
 
     const [subcategoryForm, setSubcategoryForm] = useState({
@@ -251,20 +250,20 @@ const AdminProductPage = () => {
     };
 
     const createCategory = async () => {
-        if (!categoryForm.category_name || !categoryForm.icon) return;
+        if (!categoryForm.category_name) return;
 
         try {
             const payload = {
                 category_name:
                     categoryForm.category_name.charAt(0).toUpperCase() +
                     categoryForm.category_name.slice(1),
-                icon: categoryForm.icon,
+
             };
 
             const response = await axiosInstance.post('/admin/add-category', payload);
             const newCategory = response.data.category;
             setCategories((prev) => [...prev, newCategory]);
-            setCategoryForm({ category_name: '', icon: '' });
+            setCategoryForm({ category_name: '' });
             setNewCategoryModal(false);
         } catch (error) {
             console.error('Failed to create category:', error.message);
@@ -398,38 +397,10 @@ const AdminProductPage = () => {
                         required
                     />
 
-                    <label htmlFor="icon-select" style={{ marginTop: '1rem', display: 'block' }}>
-                        Select Icon:
-                    </label>
-
-                    <select id="icon-select" name="icon" value={categoryForm.icon} onChange={handleCategoryInputChange} required>
-                        <option value="">-- Select Icon --</option>
-                        {availableIcons.map(({ value, label }) => (
-                            <option key={value} value={value}>
-                                {label}
-                            </option>
-                        ))}
-                    </select>
-
-                    {categoryForm.icon && IconComponent && (
-                        <div
-                            style={{
-                                marginTop: '1rem',
-                                fontSize: '1.5rem',
-                                display: 'flex',
-                                alignItems: 'center',
-                                gap: '0.5rem',
-                            }}
-                        >
-                            <IconComponent />
-                            <span>Selected Icon Preview</span>
-                        </div>
-                    )}
-
                     <div className="modal-actions" style={{ marginTop: '1rem' }}>
                         <button
                             onClick={createCategory}
-                            disabled={!categoryForm.category_name || !categoryForm.icon}
+                            disabled={!categoryForm.category_name}
                         >
                             Create
                         </button>
