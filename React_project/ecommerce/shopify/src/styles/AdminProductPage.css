@@ -12,6 +12,11 @@
     margin-bottom: 2rem;
 }
 
+.buttonsection {
+    display: flex;
+    gap: 10px;
+}
+
 .product-list {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
