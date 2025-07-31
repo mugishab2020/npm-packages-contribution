@@ -1,111 +1,96 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import axiosInstance from '../utils/AxiosInstance';
 import Loader from '../components/Loader';
-import '../styles/ProfilePage.css';
+import '../styles/ProfilePage.css'; // Make sure this path matches your project
 
 const ProfilePage = () => {
     const [user, setUser] = useState(null);
-    const [isEditing, setIsEditing] = useState(false);
-    const [formData, setFormData] = useState({});
-    const [loading, setLoading] = useState(true);
-    const [message, setMessage] = useState('');
+    const navigate = useNavigate();
 
-    // ✅ Fetch user profile from backend
     useEffect(() => {
-        const fetchProfile = async () => {
-            try {
-                const response = await axiosInstance.get('/auth/profile');
-                setUser(response.data);
-                setFormData(response.data);
-            } catch (error) {
-                console.error('Failed to fetch profile:', error);
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        fetchProfile();
-    }, []);
-
-    const handleEditToggle = () => {
-        setIsEditing(!isEditing);
-        setFormData(user); // reset edits if canceled
-        setMessage('');
-    };
-
-    const handleChange = (e) => {
-        setFormData({ ...formData, [e.target.name]: e.target.value });
-    };
-
-    // ✅ Save updates to backend
-    const handleSave = async () => {
-        try {
-            const response = await axiosInstance.put('/user/profile', formData);
-            setUser(response.data);
-            setMessage('Profile updated successfully.');
-            setIsEditing(false);
-        } catch (error) {
-            console.error('Failed to update profile:', error);
-            setMessage('Error updating profile.');
+        const token = localStorage.getItem('token');
+        if (!token) {
+            navigate('/login');
+            return;
         }
-    };
 
-    if (loading) return <div><Loader /></div>;
+        axiosInstance
+            .get('/auth/profile', {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            })
+            .then((res) => {
+                setUser(res.data);
+            })
+            .catch((err) => {
+                console.error('Unauthorized:', err);
+                localStorage.removeItem('token');
+                navigate('/login');
+            });
+    }, [navigate]);
+
+    if (!user) return <div className="loader"><Loader /></div>;
 
     return (
         <div className="profile-container">
-            <h2>User Profile</h2>
-            {message && <p className="message">{message}</p>}
+            <div className="profile-header">
+                <h2>Profile</h2>
+                <p>View all your profile details here.</p>
+            </div>
 
-            <div className="profile-info">
-                <div className="profile-field">
-                    <label>Username:</label>
-                    <span>{user.username}</span>
-                </div>
-
-                <div className="profile-field">
-                    <label>Email:</label>
-                    <span>{user.email}</span>
-                </div>
-
-                <div className="profile-field">
-                    <label>Phone:</label>
-                    {isEditing ? (
-                        <input
-                            type="text"
-                            name="phone"
-                            value={formData.phone || ''}
-                            onChange={handleChange}
+            <div className="profile-content">
+                <div className="profile-left">
+                    <h3>{user.username}</h3>
+                    <div className="avatar-wrapper">
+                        <img
+                            src={user.avatar || "https://via.placeholder.com/150"}
+                            alt="User Avatar"
+                            className="profile-avatar"
                         />
-                    ) : (
-                        <span>{user.phone}</span>
-                    )}
-                </div>
-
-                <div className="profile-field">
-                    <label>Address:</label>
-                    {isEditing ? (
+                        <label htmlFor="avatar-upload" className="camera-icon">
+                            <img src="/icons/camera.png" alt="Upload" />
+                        </label>
                         <input
-                            type="text"
-                            name="address"
-                            value={formData.address || ''}
-                            onChange={handleChange}
+                            type="file"
+                            id="avatar-upload"
+                            accept="image/*"
                         />
-                    ) : (
-                        <span>{user.address}</span>
-                    )}
+                    </div>
+
+                    <span className="badge-role">{user.role === 'admin' ? 'Admin' : 'Premium User'}</span>
+                </div>
+                <div className="profile-info">
+                    <div className="profile-right">
+                        <h4>Bio & Other Details</h4>
+                        <div className="profile-grid">
+                            <div><strong>Email:</strong> {user.email}</div>
+                            <div><strong>Phone:</strong> {user.phone}</div>
+                            <div><strong>Age:</strong> {user.age}</div>
+                            <div><strong>Role:</strong> {user.role}</div>
+                            <div><strong>Status:</strong> <span className="status">Available</span></div>
+                        </div>
+                    </div>
+                    <div className="edit-button">
+                        <button className="btn btn-primary">Edit Profile</button>
+                    </div>
                 </div>
 
-                <div className="button-group">
-                    <button onClick={handleEditToggle}>
-                        {isEditing ? 'Cancel' : 'Edit Profile'}
-                    </button>
-                    {isEditing && (
-                        <button className="save-btn" onClick={handleSave}>
-                            Save Changes
-                        </button>
-                    )}
+            </div>
+
+
+            <div className="links">
+                <h3>Social Media</h3>
+                <div className="icons">
+                    <a href="https://www.instagram.com" target="_blank" rel="noopener noreferrer">
+                        <img src="/icons/instagram.png" alt="Instagram" />
+                    </a>
+                    <a href="https://www.linkedin.com" target="_blank" rel="noopener noreferrer">
+                        <img src="/icons/linkedin.png" alt="LinkedIn" />
+                    </a>
                 </div>
+
             </div>
         </div>
     );

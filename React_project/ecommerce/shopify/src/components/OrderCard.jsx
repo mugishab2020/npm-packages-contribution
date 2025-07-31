@@ -12,10 +12,10 @@ const OrderCard = ({ order, onMarkAsDelivering }) => {
             <div className="order-body">
                 <img src={order.productImage} alt={order.productName} className="product-image" />
                 <div className="order-info">
-                    <h4>{order.productName}</h4>
-                    <p><strong>Price:</strong> ${order.price}</p>
+                    <h4>{order.products}</h4>
+                    <p><strong>Price:</strong> ${order.total_cost}</p>
 
-                    <p><strong>Customer:</strong> {order.customer}</p>
+                    <p><strong>Customer:</strong> {order.User.username}</p>
                 </div>
             </div>
 
