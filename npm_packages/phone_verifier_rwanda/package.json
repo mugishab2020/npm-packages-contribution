@@ -1,0 +1,22 @@
+{
+  "name": "phone-verifier-rwanda",
+  "version": "1.0.0",
+  "description": "A JavaScript package to validate and normalize Rwandan phone numbers",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "keywords": [
+    "rwanda",
+    "phone",
+    "validator",
+    "phone-number",
+    "normalize",
+    "rwandan-mobile"
+  ],
+  "author": "edson_mugisha",
+  "license": "MIT",
+  "devDependencies": {
+    "jest": "^30.1.3"
+  }
+}
